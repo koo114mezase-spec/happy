@@ -1,0 +1,35 @@
+body {
+    margin: 0;
+    background: black;
+    overflow: hidden;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    height: 100vh;
+}
+
+.container {
+    position: relative;
+    width: 500px;
+    height: 500px;
+}
+
+#plate {
+    position: absolute;
+    width: 500px;
+
+    z-index: 1;
+
+    cursor: pointer;
+}
+
+#cake {
+    position: absolute;
+    width: 500px;
+
+    z-index: 2;
+
+    pointer-events: none;
+}

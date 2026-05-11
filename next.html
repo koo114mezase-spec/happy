@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Happy Birthday</title>
+
+<style>
+
+body {
+    margin: 0;
+    background: black;
+    overflow: hidden;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    height: 100vh;
+
+    font-size: 70px;
+    font-weight: bold;
+    font-family: sans-serif;
+
+    animation: rainbowText 3s linear infinite;
+}
+
+@keyframes rainbowText {
+
+    0% {
+        color: red;
+        text-shadow:
+            0 0 10px red,
+            0 0 20px red;
+    }
+
+    20% {
+        color: orange;
+        text-shadow:
+            0 0 10px orange,
+            0 0 20px orange;
+    }
+
+    40% {
+        color: yellow;
+        text-shadow:
+            0 0 10px yellow,
+            0 0 20px yellow;
+    }
+
+    60% {
+        color: lime;
+        text-shadow:
+            0 0 10px lime,
+            0 0 20px lime;
+    }
+
+    80% {
+        color: cyan;
+        text-shadow:
+            0 0 10px cyan,
+            0 0 20px cyan;
+    }
+
+    100% {
+        color: magenta;
+        text-shadow:
+            0 0 10px magenta,
+            0 0 20px magenta;
+    }
+
+}
+
+#confetti {
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    pointer-events: none;
+}
+
+</style>
+</head>
+
+<body>
+
+<div>
+    Happy Birthday
+</div>
+
+<canvas id="confetti"></canvas>
+
+<script>
+
+const canvas =
+    document.getElementById("confetti");
+
+const ctx =
+    canvas.getContext("2d");
+
+canvas.width =
+    window.innerWidth;
+
+canvas.height =
+    window.innerHeight;
+
+const pieces = [];
+
+let confettiAmount = 60;
+
+/* 紙吹雪生成 */
+
+function createConfetti(amount) {
+
+    for (let i = 0; i < amount; i++) {
+
+        pieces.push({
+
+            x:
+                Math.random() * canvas.width,
+
+            y:
+                -20,
+
+            size:
+                Math.random() * 12 + 6,
+
+            speed:
+                Math.random() * 3 + 2,
+
+            swing:
+                Math.random() * 4 - 2,
+
+            rotation:
+                Math.random() * 360,
+
+            type:
+                Math.floor(Math.random() * 3)
+
+        });
+
+    }
+
+}
+
+/* 描画 */
+
+function updateConfetti() {
+
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+    for (let i = 0; i < pieces.length; i++) {
+
+        const p = pieces[i];
+
+        p.y += p.speed;
+
+        p.x += p.swing;
+
+        p.rotation += 2;
+
+        ctx.save();
+
+        ctx.translate(
+            p.x,
+            p.y
+        );
+
+        ctx.rotate(
+            p.rotation * Math.PI / 180
+        );
+
+        ctx.fillStyle =
+            `hsl(${Math.random() * 360}, 100%, 50%)`;
+
+        /* 四角 */
+
+        if (p.type === 0) {
+
+            ctx.fillRect(
+                -p.size / 2,
+                -p.size / 2,
+                p.size,
+                p.size
+            );
+
+        }
+
+        /* 丸 */
+
+        else if (p.type === 1) {
+
+            ctx.beginPath();
+
+            ctx.arc(
+                0,
+                0,
+                p.size / 2,
+                0,
+                Math.PI * 2
+            );
+
+            ctx.fill();
+
+        }
+
+        /* 三角 */
+
+        else {
+
+            ctx.beginPath();
+
+            ctx.moveTo(
+                0,
+                -p.size
+            );
+
+            ctx.lineTo(
+                p.size,
+                p.size
+            );
+
+            ctx.lineTo(
+                -p.size,
+                p.size
+            );
+
+            ctx.closePath();
+
+            ctx.fill();
+
+        }
+
+        ctx.restore();
+
+    }
+
+    requestAnimationFrame(
+        updateConfetti
+    );
+
+}
+
+/* 1秒後スタート */
+
+setTimeout(() => {
+
+    createConfetti(confettiAmount);
+
+    /* 2秒ごとに増加 */
+
+    setInterval(() => {
+
+        confettiAmount =
+            Math.floor(confettiAmount * 1.5);
+
+        createConfetti(confettiAmount);
+
+    }, 2000);
+
+    updateConfetti();
+
+}, 1000);
+
+/* リサイズ対応 */
+
+window.addEventListener(
+    "resize",
+    () => {
+
+        canvas.width =
+            window.innerWidth;
+
+        canvas.height =
+            window.innerHeight;
+
+    }
+);
+
+</script>
+
+</body>
+</html>
